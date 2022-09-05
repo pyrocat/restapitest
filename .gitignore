@@ -1,0 +1,6 @@
+.env_variables/
+*.env
+.venv/
+.idea/
+.ipynb_checkpoints/
+__init_
