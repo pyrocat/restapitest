@@ -82,16 +82,17 @@ DATABASES = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     },
+
     'redmine': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'remote_db/remote_sqlite3.db',
     }
 }
 
-DATABASE_ROUTERS = ['manager.router.DatabaseAppsRouter']
+DATABASE_ROUTERS = ['redmine.routers.RedmineRouter']
 
-DATABASE_APPS_MAPPING = {'core': 'default',
-                         'redmine':'redmine'}
+# DATABASE_APPS_MAPPING = {'core': 'default',
+#                          'redmine':'redmine'}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
