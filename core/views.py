@@ -1,46 +1,51 @@
-from django.shortcuts import render
-from django.contrib.auth.models import User, Group
-from rest_framework import viewsets, permissions
+from rest_framework import permissions
 from rest_framework.authentication import TokenAuthentication
-from .serializers import UserSerializer, GroupSerializer
 
 from core.models import Snippet
 from core.serializers import SnippetSerializer
-from django.http import Http404
-from rest_framework.views import APIView
+
+from redmine.serializers import ProjectSerializer
 from rest_framework.response import Response
-from rest_framework import status
+
 from rest_framework import generics, renderers
 from rest_framework.reverse import reverse
 
 from .permissions import IsOwnerOrReadOnly
-# Create your views here.
+from rest_framework.views import APIView
 
-class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all().order_by('-date_joined')
-    serializer_class = UserSerializer
-    permission_classes = [permissions.IsAuthenticated]
+from redmine.models import Project
 
 class ApiRoot(APIView):
+    """
+    Root endpoint for the API
+    """
+    authentication_classes = [TokenAuthentication, ]
+    permission_classes = [permissions.IsAuthenticated, ]
+
     def get(self, request, format=None):
         return Response(
             {
-                'snippets': reverse('snippet-list', request=request, format=format),
+                'projects': reverse('project-list', request=request, format=format),
                 'users': reverse('user-list', request=request, format=format)
             }
         )
 
-
-
-
-class GroupViewSet(viewsets.ModelViewSet):
+class ProjectList(generics.ListAPIView):
     """
-    API endpoint that allows groups to be viewed or edited.
+    Lists Redmine Projects related to the user
     """
-    queryset = Group.objects.all()
-    serializer_class = GroupSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = ProjectSerializer
+    authentication_classes = [TokenAuthentication, ]
+    permission_classes = [permissions.IsAuthenticated,]
+    def get_queryset(self):
+        user = self.request.user
+        print(f'Username to search against {user.username}')
+        projects = Project.objects.filter(member__user__login=user.username)
+        return projects
 
+
+
+# Code below is not relevant at the moment
 
 class SnippetList(generics.ListCreateAPIView):
     """
@@ -56,19 +61,22 @@ class SnippetList(generics.ListCreateAPIView):
 
 
 class SnippetDetail(generics.RetrieveUpdateDestroyAPIView):
+    """
+    View details for a Snippet
+    """
     authentication_classes = [TokenAuthentication, ]
     permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
     queryset = Snippet.objects.all()
     serializer_class = SnippetSerializer
 
 
-
 class SnippetHighlight(generics.GenericAPIView):
+    """
+    Renders highlighted code field as HTML
+    """
     queryset = Snippet.objects.all()
     renderer_classes = [renderers.StaticHTMLRenderer]
 
     def get(self, request, *args, **kwargs):
         snippet = self.get_object()
         return Response(snippet.highlighted)
-
-
