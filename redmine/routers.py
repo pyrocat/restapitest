@@ -4,7 +4,6 @@ class RedmineRouter(object):
     the redmine application
     """
 
-
     def db_for_read(self, model, **hints):
         """
         Point all operations on redmine app models to 'redmine' database
@@ -18,7 +17,9 @@ class RedmineRouter(object):
         Point all operations on redmine app models to 'other'
         """
         if model._meta.app_label == 'redmine':
-            return 'default' # writing to 'redmine' not allowed
+            return 'default' # writing to 'redmine' not allowed /
+        # an attempt to do so will result in an exception if respective table is missing
+        # TODO clarify this behaviour, as it may lead to unpredictable results
         return None
 
     def allow_syncdb(self, db, model):
