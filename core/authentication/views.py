@@ -18,5 +18,7 @@ class RedmineTokenLoginView(ObtainAuthToken):
                                          context={'request': request})
         serializer.is_valid(raise_exception=True)
 
+
+
         return Response(serializer.validated_data)
 

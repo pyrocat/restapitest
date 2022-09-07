@@ -142,3 +142,4 @@ REST_FRAMEWORK = {
         'core.authentication.backends.RedmineTokenAuthentication',
     ],
 }
+
