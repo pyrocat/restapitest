@@ -1,5 +1,5 @@
 from rest_framework.authtoken.views import ObtainAuthToken
-from rest_framework.authtoken.models import Token
+
 from rest_framework.response import Response
 from rest_framework import permissions
 from django.contrib.auth.models import User
@@ -17,8 +17,6 @@ class RedmineTokenLoginView(ObtainAuthToken):
         serializer = self.get_serializer(data=request.data,
                                          context={'request': request})
         serializer.is_valid(raise_exception=True)
-
-
 
         return Response(serializer.validated_data)
 

@@ -139,7 +139,8 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10,
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'core.authentication.backends.RedmineTokenAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
     ],
 }
 
+AUTHENTICATION_BACKENDS = ['core.authentication.backends.RedmineTokenAuthentication']

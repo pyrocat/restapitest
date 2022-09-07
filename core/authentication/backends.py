@@ -1,5 +1,4 @@
-from rest_framework.authentication import TokenAuthentication
-
+from django.contrib.auth.backends import BaseBackend
 from redmine.models import HelpdeskUser, RedmineToken
 from rest_framework.exceptions import AuthenticationFailed
 from django.contrib.auth.models import User
@@ -10,42 +9,31 @@ from loguru import logger
 logger.add('backend.log')
 
 
-class RedmineTokenAuthentication(TokenAuthentication):
-    keyword = 'Token'
-    model = None
+class RedmineTokenAuthentication(BaseBackend):
+    """
+    Provides authentication against remote database.
+    """
 
-    def authenticate(self, request):
-        remote_credentials = self._get_remote_credentials(request)
-
-        logger.info(f'Got remote_credentials <{remote_credentials}>')
+    def authenticate(self, request, **kwargs):
 
         try:
-            username = remote_credentials.get('username')
-            remote_key = remote_credentials.get('remote_key')
+            username = kwargs.get('username')
+            remote_key = kwargs.get('remote_key')
             hd_user = REMOTE_USER_MODEL.objects.get(login=username,  # too dependent on the remote model, rearrange later
                                                     redminetoken__value=remote_key)
-            logger.info(f'Found hd_user: <{hd_user}>')
+            logger.info(f'Found remote user: <{hd_user}>')
         except HelpdeskUser.DoesNotExist:
             raise AuthenticationFailed
 
         self.user, _ = User.objects.get_or_create(username=hd_user.login)
 
-        self.user.save()
-        token_model = self.get_model()
-        token, _ = token_model.objects.get_or_create(user=self.user)
+        logger.info(f'Returning local user <{self.user}>')
+        return self.user
 
-        logger.info(f'Returning user and token <{self.user}> <{token}>')
-        return self.user, token
+    def get_user(self, user_id):
+        try:
+            return User.objects.get(pk=user_id)
+        except User.DoesNotExist:
+            return None
 
 
-    def authenticate_header(self, request):
-        return self.keyword
-
-    def _get_remote_credentials(self, request):
-        logger.info(f'request.POST <{request.POST}>')
-        remote_auth_kwargs = {
-            "username": request.POST["username"],
-            "remote_key": request.POST["remote_key"],  # too dependent on the serializer field name
-            #  TODO choose more general naming later
-        }
-        return remote_auth_kwargs
