@@ -1,3 +1,5 @@
+import json.decoder
+
 import requests
 from requests import Request, Session, Response
 
@@ -15,7 +17,7 @@ class ApiBrowser:
 
         payload = {
             'username': username,
-            'redmine_key': key
+            'remote_key': key
         }
 
         self._s = Session()
@@ -25,6 +27,9 @@ class ApiBrowser:
             self.token = 'Token ' + r.json()['token']
         except KeyError as err:
             print(err, r.json()['detail'])
+        except json.decoder.JSONDecodeError as err:
+            print(err)
+            print(r.text)
 
         self._s.headers['Authorization'] = self.token
 

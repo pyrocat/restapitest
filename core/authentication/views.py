@@ -17,7 +17,6 @@ class RedmineTokenLoginView(ObtainAuthToken):
         serializer = self.get_serializer(data=request.data,
                                          context={'request': request})
         serializer.is_valid(raise_exception=True)
-        user: User = serializer.validated_data['user']
-        token, _ = Token.objects.get_or_create(user=user)
-        return Response({'token': token.key})
+
+        return Response(serializer.validated_data)
 
