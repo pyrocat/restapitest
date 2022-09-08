@@ -78,8 +78,7 @@ WSGI_APPLICATION = 'petproject.wsgi.application'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {},
-    'auth': {
+    'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     },
@@ -89,7 +88,7 @@ DATABASES = {
     }
 }
 
-DATABASE_ROUTERS = ['redmine.routers.AuthRouter', 'redmine.routers.RedmineRouter']
+DATABASE_ROUTERS = ['redmine.routers.RedmineRouter']
 
 # DATABASE_APPS_MAPPING = {'core': 'default',
 #                          'redmine':'redmine'}

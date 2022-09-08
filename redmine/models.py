@@ -38,7 +38,7 @@ class Member(models.Model):
 
 class Role(models.Model):
     name = models.CharField(max_length=150)
-
+    description = models.TextField()
     class Meta:
         managed = False
         db_table = 'Roles'
@@ -53,7 +53,6 @@ class MemberRole(models.Model):
         db_table = 'MemberRoles'
 
 
-
 class RedmineToken(models.Model):
     user = models.OneToOneField(HelpdeskUser, on_delete=models.CASCADE)
     action = models.TextField(blank=True, null=True)
@@ -65,9 +64,4 @@ class RedmineToken(models.Model):
         managed = False
         db_table = 'Tokens'
 
-
-class RoleNew(models.Model):
-    name = models.CharField(max_length=150)
-    someother = models.TextField(blank=True, null=True)
-    onemore = models.TextField(blank=True, null=True)
 

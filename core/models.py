@@ -14,8 +14,6 @@ LANGUAGE_CHOICES = sorted([(item[1][0], item[0]) for item in LEXERS])
 STYLE_CHOICES = sorted([(item, item) for item in get_all_styles()])
 
 
-
-
 class Snippet(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     title = models.CharField(max_length=100, blank=True, default='')
@@ -41,8 +39,4 @@ class Snippet(models.Model):
                                   full=True, **options)
         self.highlighted = highlight(self.code, lexer, formatter)
         super().save(*args, **kwargs)
-
-
-
-
 
