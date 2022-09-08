@@ -22,7 +22,7 @@ class RedmineTokenAuthentication(BaseBackend):
             hd_user = REMOTE_USER_MODEL.objects.get(login=username,  # too dependent on the remote model, rearrange later
                                                     redminetoken__value=remote_key)
             logger.info(f'Found remote user: <{hd_user}>')
-        except HelpdeskUser.DoesNotExist:
+        except REMOTE_USER_MODEL.DoesNotExist:
             raise AuthenticationFailed
 
         self.user, _ = User.objects.get_or_create(username=hd_user.login)

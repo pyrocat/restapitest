@@ -78,18 +78,18 @@ WSGI_APPLICATION = 'petproject.wsgi.application'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
+    'default': {},
+    'auth': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     },
-
     'redmine': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'remote_db/remote_sqlite3.db',
     }
 }
 
-DATABASE_ROUTERS = ['redmine.routers.RedmineRouter']
+DATABASE_ROUTERS = ['redmine.routers.AuthRouter', 'redmine.routers.RedmineRouter']
 
 # DATABASE_APPS_MAPPING = {'core': 'default',
 #                          'redmine':'redmine'}
@@ -142,5 +142,4 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
     ],
 }
-
 AUTHENTICATION_BACKENDS = ['core.authentication.backends.RedmineTokenAuthentication']

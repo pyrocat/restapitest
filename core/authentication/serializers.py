@@ -11,7 +11,7 @@ class RedmineTokenLoginSerializer(serializers.Serializer):
     Allows to login with redmine_key instead of a password
     """
     username = serializers.CharField(required=True)
-    remote_key = serializers.CharField(required=True)
+    remote_key = serializers.CharField(required=True, write_only=True)
 
     token = serializers.ReadOnlyField(required=False)
     def validate(self, attrs):
@@ -36,6 +36,5 @@ class RedmineTokenLoginSerializer(serializers.Serializer):
         logger.info(f'Validated user <{user}> with token key <{token.key}>')
 
         attrs['token'] = token.key
-        attrs['user'] = user.username
 
         return attrs

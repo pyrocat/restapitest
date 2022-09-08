@@ -19,7 +19,6 @@ class HelpdeskUser(models.Model):
     lastname = models.CharField(blank=True, null=True, max_length=150)
     admin = models.BooleanField()
     status = models.BooleanField()
-
     class Meta:
         managed = False
         db_table = 'HelpDeskUser'
@@ -61,7 +60,14 @@ class RedmineToken(models.Model):
     value = models.TextField()
     created_on = models.DateTimeField(db_column='created on')  # Field renamed to remove unsuitable characters.
     updated_on = models.DateTimeField(db_column='updated on')  # Field renamed to remove unsuitable characters.
-
+    someother = models.TextField(blank=True, null=True)
     class Meta:
         managed = False
         db_table = 'Tokens'
+
+
+class RoleNew(models.Model):
+    name = models.CharField(max_length=150)
+    someother = models.TextField(blank=True, null=True)
+    onemore = models.TextField(blank=True, null=True)
+
