@@ -66,8 +66,3 @@ class RedmineToken(models.Model):
         db_table = 'Tokens'
 
 
-class RoleNew(models.Model):
-    name = models.CharField(max_length=150)
-    someother = models.TextField(blank=True, null=True)
-    onemore = models.TextField(blank=True, null=True)
-

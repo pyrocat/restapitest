@@ -42,7 +42,3 @@ class Snippet(models.Model):
         self.highlighted = highlight(self.code, lexer, formatter)
         super().save(*args, **kwargs)
 
-
-
-
-
